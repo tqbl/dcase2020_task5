@@ -71,16 +71,18 @@ class SimpleLabeler:
         if pattern:
             self.pattern = pattern
             if regex:
-                self.callback = SimpleLabeler._labels_from_filtered
+                self.callback = self._labels_from_filtered
             else:
-                self.callback = SimpleLabeler._labels_from_column
+                self.callback = self._labels_from_column
         else:
-            self.callback = SimpleLabeler.self._labels
+            self.callback = self._labels
 
-        if get_dummies:
-            self.__call__ = SimpleLabeler._dummies
-        else:
-            self.__call__ = self.callback
+        self.get_dummies = get_dummies
+
+    def __call__(self, subset):
+        if self.get_dummies:
+            return self._dummies(subset)
+        return self.callback(subset)
 
     def _labels(self, subset):
         return subset.tags

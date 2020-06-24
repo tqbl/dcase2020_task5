@@ -27,7 +27,7 @@ def extract(args):
     # Ensure output directory exists
     args.extraction_dir.mkdir(parents=True, exist_ok=True)
 
-    # Log the values of the parameters
+    # Write hyperparameters to disk
     utils.log_parameters(args.extraction_dir / 'parameters.json', **params)
 
     output_path = args.extraction_dir / (subset.name + '.h5')
@@ -37,7 +37,7 @@ def extract(args):
         shape = (-1,) + shape[1:]
     print(f'Extracting features with shape {shape}...')
     print(f'Output path: {output_path}')
-    audio_paths = tqdm(subset.audio_paths())
+    audio_paths = tqdm(subset.audio_paths)
     features.extract(audio_paths,
                      extractor,
                      output_path,

@@ -53,8 +53,10 @@ def predict(args):
     prediction_dir = args.prediction_dir / args.training_id
     prediction_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save predictions and hyperparameters to disk
-    y_pred.to_csv(prediction_dir / f'{subset.name}.csv')
+    # Write predictions and hyperparameters to output directory
+    output_path = prediction_dir / f'{subset.name}.csv'
+    print(f'Output path: {output_path}')
+    y_pred.to_csv(output_path)
     utils.log_parameters(prediction_dir / 'parameters.json',
                          epochs=args.epochs,
                          )
@@ -112,6 +114,8 @@ def _epochs(arg):
 
 
 def _determine_epochs(spec, log_dir):
+    import pandas as pd
+
     if type(spec) is list:
         return spec
 

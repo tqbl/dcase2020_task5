@@ -6,9 +6,12 @@ from core.mask import FrameMask
 
 
 class Dataset:
-    def __init__(self, name, root_path, clip_duration=None):
+    def __init__(self, name, root_dir, clip_duration=None):
+        self.root_dir = Path(root_dir)
+        if not self.root_dir.is_dir():
+            raise FileNotFoundError(f'No such directory: {root_dir}')
+
         self.name = name
-        self.root_path = Path(root_path)
         self.clip_duration = clip_duration
         self.subsets = dict()
 
@@ -36,8 +39,16 @@ class Dataset:
 
 class DataSubset:
     def __init__(self, name, dataset, tags=None, audio_dir=None):
+        if audio_dir is None:
+            audio_dir = dataset.root_dir
+        else:
+            audio_dir = Path(audio_dir)
+            if not audio_dir.is_dir():
+                raise FileNotFoundError(f'No such directory: {audio_dir}')
+
         self.name = name
         self.dataset = dataset
+        self._audio_paths = None
 
         if tags is None:
             # Create an empty DataFrame if no tags are given
@@ -48,14 +59,21 @@ class DataSubset:
 
         # Record the audio directory as a tag
         if '_audio_dir' not in self.tags.columns:
-            self.tags['_audio_dir'] = audio_dir or dataset.root_path
+            self.tags['_audio_dir'] = audio_dir
 
     def concat(subsets, name=None):
         tags = pd.concat([subset.tags for subset in subsets])
         return DataSubset(name or subsets[0].name, subsets[0].dataset, tags)
 
-    def audio_paths(self, must_exist=False):
-        return (self.tags._audio_dir / self.tags.index).unique()
+    @property
+    def audio_paths(self):
+        if self._audio_paths is None:
+            audio_dirs = self.tags._audio_dir.groupby(
+                level=0, sort=False).first()
+            fnames = self.tags.index.unique(level=0)
+            self._audio_paths = audio_dirs / fnames
+
+        return self._audio_paths
 
     def subset(self, name, mask, complement=False):
         if callable(mask):

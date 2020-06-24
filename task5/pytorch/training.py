@@ -6,6 +6,7 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
 
 import pytorch.models as models
+from core.metrics import Metrics
 from pytorch.data import MappedDataLoader, ContextualizedDataset, SimpleDataset
 from pytorch.logging import Logger
 from pytorch.specaug import SpecAugment
@@ -68,6 +69,8 @@ def train(x_train, y_train, x_val, y_val, log_dir, model_dir, **params):
     # Instantiate Logger to record training/validation performance and
     # save checkpoint to disk after every epoch.
     logger = Logger(log_dir, model_dir, params['overwrite'])
+    # Use Metrics class to compute scores
+    metrics = Metrics(y_train.columns)
 
     for epoch in range(initial_epoch, params['n_epochs']):
         # Enable data augmentation after 5 epochs
@@ -77,10 +80,10 @@ def train(x_train, y_train, x_val, y_val, log_dir, model_dir, **params):
         # Train model using training set
         pbar = tqdm(loader_train)
         pbar.set_description(f'Epoch {epoch}')
-        _train(pbar, model.train(), criterion, optimizer, logger)
+        _train(model.train(), pbar, criterion, optimizer, logger)
 
         # Evaluate model using validation set
-        _validate(loader_val, y_val.index, model.eval(), criterion, logger)
+        _validate(model.eval(), loader_val, criterion, metrics, logger)
 
         # Invoke learning rate scheduler
         scheduler.step()
@@ -114,8 +117,8 @@ def predict(x, epoch, model_dir, use_stc=False, batch_size=128):
     return y_pred.cpu().numpy()
 
 
-def _train(data, model, criterion, optimizer, logger):
-    for batch_x, batch_y in data:
+def _train(model, loader, criterion, optimizer, logger):
+    for batch_x, batch_y in loader:
         optimizer.zero_grad()
         output = model(batch_x)
         loss = criterion(output, batch_y)
@@ -125,14 +128,19 @@ def _train(data, model, criterion, optimizer, logger):
         logger.log('loss', loss.item())
 
 
-def _validate(loader, index, model, criterion, logger):
+def _validate(model, loader, criterion, metrics, logger):
     y_true = loader.dataset.y
     with torch.no_grad():
         y_pred = torch.cat([model(batch_x).sigmoid().data
-                            for batch_x, _ in loader])
+                            for batch_x, _ in loader]).cpu()
 
     loss = criterion(y_pred, y_true)
     logger.log('val_loss', loss.item())
+
+    y_true = y_true.numpy()
+    y_pred = y_pred.numpy()
+    for name, score in metrics.scores(y_true, y_pred).items():
+        logger.log(f'val_{name}', score)
 
 
 def _load_checkpoint(model, optimizer, scheduler, model_dir):
@@ -149,10 +157,10 @@ def _load_checkpoint(model, optimizer, scheduler, model_dir):
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
-    torch.set_rng_state(checkpoint['rng_state'])
+    torch.set_rng_state(checkpoint['rng_state'].cpu())
     if checkpoint.get('cuda_rng_state') is not None \
             and torch.cuda.is_available():
-        torch.cuda.set_rng_state(checkpoint['cuda_rng_state'])
+        torch.cuda.set_rng_state(checkpoint['cuda_rng_state'].cpu())
 
     if epoch != checkpoint['epoch']:
         # The epoch to resume from is determined by the file name of the

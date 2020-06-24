@@ -11,7 +11,7 @@ def train(args):
     import pytorch.training as training
     from core.dataloader import SpectrogramLoader, Standardizer, STCWrapper
 
-    dataset = sonyc_ust.SONYC_UST(args.dataset_dir, version=2)
+    dataset = sonyc_ust.SONYC_UST(args.dataset_dir, args.pseudolabel_path)
     train_set = dataset['training']
     val_set = dataset['validation']
 
@@ -39,7 +39,7 @@ def train(args):
     model_dir = args.model_dir / args.training_id
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save hyperparameters to disk
+    # Write hyperparameters to disk
     params = {
         'model': args.model,
         'seed': args.seed,
@@ -58,6 +58,8 @@ def train(args):
     }
     utils.log_parameters(args.log_dir / 'parameters.json', **params, **masks)
 
+    print(f'log_dir: {log_dir}')
+    print(f'model_dir: {model_dir}')
     training.train(x_train, y_train, x_val, y_val,
                    log_dir, model_dir, **params)
 

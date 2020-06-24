@@ -6,18 +6,18 @@ from core.dataset import DataSubset
 
 
 class SONYC_UST(Dataset):
-    def __init__(self, root_path, annotations_path=None, version=2):
-        super().__init__(f'SONYC-UST v{version}', root_path, clip_duration=10)
+    def __init__(self, root_dir, annotations_path=None, version=2):
+        super().__init__(f'SONYC-UST v{version}', root_dir, clip_duration=10)
 
         # Determine label set
-        taxonomy_path = self.root_path / 'dcase-ust-taxonomy.yaml'
+        taxonomy_path = self.root_dir / 'dcase-ust-taxonomy.yaml'
         label_sets = _read_taxonomy(taxonomy_path)
         self.coarse_label_set, self.fine_label_set = label_sets
         self.label_set = self.fine_label_set
 
         # Read annotations (tags) from file
         if annotations_path is None:
-            annotations_path = self.root_path / 'annotations.csv'
+            annotations_path = self.root_dir / 'annotations.csv'
         dtype_map = {f'{label}_proximity': object
                      for label in self.fine_label_set}
         tags = pd.read_csv(annotations_path,
@@ -36,21 +36,21 @@ class SONYC_UST(Dataset):
     def _add_v1_subsets(self, tags):
         self.add_subset(DataSubset('training', self,
                                    tags[tags.split == 'train'],
-                                   self.root_path / 'train'))
+                                   self.root_dir / 'train'))
         self.add_subset(DataSubset('validation', self,
                                    tags[tags.split == 'validate'],
-                                   self.root_path / 'validate'))
+                                   self.root_dir / 'validate'))
         self.add_subset(DataSubset('test', self,
                                    tags[tags.split == 'test'],
-                                   self.root_path / 'audio-eval'))
+                                   self.root_dir / 'audio-eval'))
 
     def _add_v2_subsets(self, tags):
-        audio_dir = self.root_path / 'audio'
+        audio_dir = self.root_dir / 'audio'
         subset = DataSubset('all', self, tags, audio_dir)
         self.add_subset(subset.subset('training', tags.split == 'train'))
         self.add_subset(subset.subset('validation', tags.split == 'validate'))
 
-        test_dirs = [self.root_path / f'audio-eval-{i}' for i in range(3)]
+        test_dirs = [self.root_dir / f'audio-eval-{i}' for i in range(3)]
         test_set = DataSubset.concat([DataSubset('test', self, None, audio_dir)
                                       for audio_dir in test_dirs])
         test_set.tags = test_set.tags.join(tags[tags.split == 'test'])
