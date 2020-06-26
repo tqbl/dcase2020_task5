@@ -9,9 +9,10 @@ import utils
 def train(args):
     import core.sonyc_ust as sonyc_ust
     import pytorch.training as training
-    from core.dataloader import SpectrogramLoader, Standardizer, STCWrapper
+    from core.dataloader import SpectrogramLoader, Standardizer
+    from core.sonyc_ust import SONYC_UST, STCWrapper
 
-    dataset = sonyc_ust.SONYC_UST(args.dataset_dir, args.pseudolabel_path)
+    dataset = SONYC_UST(args.dataset_dir, args.pseudolabel_path, version=2)
     train_set = dataset['training']
     val_set = dataset['validation']
 

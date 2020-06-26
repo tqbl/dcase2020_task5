@@ -39,33 +39,6 @@ class Standardizer:
         return x, y
 
 
-class STCWrapper:
-    def __init__(self, loader):
-        self.loader = loader
-
-    def __call__(self, subset):
-        x, y = self.loader(subset)
-
-        df = subset.tags.groupby(level=0, sort=False).first()
-        features = [
-            STCWrapper._one_hot(df['week'] // 4, n=14),
-            STCWrapper._one_hot(df['hour'] // 3, n=8),
-            (df['day'] > 4).astype(float),
-            STCWrapper._triangle(df['week'], max_val=26),
-            STCWrapper._triangle(df['hour'], max_val=12),
-            df['day'],
-        ]
-        aux = pd.concat(features, axis=1).values
-
-        return (x, aux), y
-
-    def _one_hot(series, n):
-        return pd.get_dummies(series).T.reindex(np.arange(n)).T.fillna(0)
-
-    def _triangle(x, max_val):
-        return max_val - np.abs(x - max_val)
-
-
 class SimpleLabeler:
     def __init__(self, pattern=None, regex=False, get_dummies=False):
         if pattern:

@@ -80,3 +80,30 @@ def labels_max(subset):
 def _aggregate_labels(subset, operation):
     columns = [f'{label}_presence' for label in subset.dataset.label_set]
     return operation(subset.tags.filter(columns).groupby(level=0, sort=False))
+
+
+class STCWrapper:
+    def __init__(self, loader):
+        self.loader = loader
+
+    def __call__(self, subset):
+        x, y = self.loader(subset)
+
+        df = subset.tags.groupby(level=0, sort=False).first()
+        features = [
+            STCWrapper._one_hot(df['week'] // 4, n=14),
+            STCWrapper._one_hot(df['hour'] // 3, n=8),
+            (df['day'] > 4).astype(float),
+            STCWrapper._triangle(df['week'], max_val=26),
+            STCWrapper._triangle(df['hour'], max_val=12),
+            df['day'],
+        ]
+        aux = pd.concat(features, axis=1).values
+
+        return (x, aux), y
+
+    def _one_hot(series, n):
+        return pd.get_dummies(series).T.reindex(list(range(n))).T.fillna(0)
+
+    def _triangle(x, max_val):
+        return max_val - (x - max_val).abs()
