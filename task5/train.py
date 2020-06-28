@@ -84,6 +84,8 @@ def parse_args():
     parser.add_argument('--extraction_dir', type=Path, metavar='DIR')
     parser.add_argument('--model_dir', type=Path, metavar='DIR')
     parser.add_argument('--log_dir', type=Path, metavar='DIR')
+    parser.add_argument('--pseudolabel_path', type=Path,
+                        default=None, metavar='PATH')
     parser.add_argument('--training_id', metavar='ID')
     parser.add_argument('--model', choices=['gcnn', 'qkcnn10'])
     parser.add_argument('--training_mask', type=cli.mask, metavar='MASK')
