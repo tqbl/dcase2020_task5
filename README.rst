@@ -46,13 +46,12 @@ downloaded in ``_dataset/``, run these commands::
     $ scripts/evaluate.sh
 
 Note that various files will be created in a directory called
-``_workspace``, which itself is created in the current working
-directory. Ensure that enough hard disk space is available (a few GBs at
-most). To change the path of the workspace directory, the configuration
-files in `scripts/`__ and the script `scripts/evaluate.sh`__ should be
-modified. The same applies if you have downloaded the dataset in a
-different directory. More details about configuring the software can be
-found in the next section.
+``_workspace``, which itself is created in the working directory. Ensure
+that enough hard disk space is available (a few GBs at most). To change
+the path of the workspace directory, modify the configuration files in
+`scripts/`__ and `scripts/evaluate.sh`__. The same applies if you have
+downloaded the dataset in a different directory. More details about
+configuring the software can be found in the next section.
 
 __ scripts
 __ scripts/evaluate.sh
@@ -68,14 +67,16 @@ The general usage pattern is::
 The various options can also be specified in a configuration file. Using
 the ``--config_file`` (or ``-f``) command-line option, the path of the
 configuration file can be specified to the program. Options that are
-passed in the command-line override those in the config file. See the
-``default.conf`` file for an example of a config file. It also includes
+passed in the command-line override those in the config file. See
+`default.conf`__ for an example of a config file. It also includes
 descriptions of each option. Note that this file is generally not
 intended to be modified, with the exception being the paths.
 
 In the following subsections, the various commands are described. Using
 this program, the user is able to extract feature vectors, train the
 network, compute predictions, and evaluate the predictions.
+
+__ default.conf
 
 Feature Extraction
 ^^^^^^^^^^^^^^^^^^
@@ -96,7 +97,7 @@ To train a model, run::
 The ``--model`` option accepts the following values:
 
 * ``gcnn`` - Use the randomly-initialized GCNN model.
-* ``qkcnn10`` - Use the pre-trained CNN10 model.
+* ``qkcnn10`` - Use the pre-trained CNN10 model. Download the weights `here`__.
 
 The ``--training_id`` option is used to differentiate training runs, and
 partially determines where the models are saved. When running multiple
@@ -108,9 +109,10 @@ Use the ``--pseudolabel_path`` option to specify where the pseudo-labels
 are located. By default, this option is not specified, which will
 disable the use of pseudo-labels for training.
 
-Use the ``--use_stc`` option to enable or disable the use of
-spatiotemporal context (STC) features. By default, this option is
-enabled.
+Use the ``--use_stc`` option to enable (default) or disable the use of
+spatiotemporal context (STC) features.
+
+__ https://zenodo.org/record/3576403/files/Cnn10_mAP=0.380.pth
 
 Prediction
 ^^^^^^^^^^
@@ -120,7 +122,7 @@ To compute predictions, run::
     python task5/main.py predict <validation/test> [--dataset_dir DIR] [--extraction_dir DIR] [--model_dir DIR] [--log_dir DIR] [--prediction_dir DIR] [--training_id ID] [--use_stc BOOL] [--mask MASK] [--epochs EPOCHS] [--clean BOOL]
 
 By default, it will average the predictions of the top three epochs
-(based on the macro AUPRC metric). To change this behaviour, use the
+(based on the macro AUPRC metric). To change this behavior, use the
 ``--epochs`` option, which accepts either a list of epoch numbers or a
 specification of the form ``metric:n``. The default value of this option
 is ``val_auprc_macro:3``.
