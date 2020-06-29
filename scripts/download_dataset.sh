@@ -10,12 +10,10 @@ mkdir -p _dataset && cd _dataset
 curl -fOL 'https://zenodo.org/record/3873076/files/README.md'
 curl -fOL 'https://zenodo.org/record/3873076/files/annotations.csv'
 curl -fOL 'https://zenodo.org/record/3873076/files/dcase-ust-taxonomy.yaml'
+curl -fOL 'https://zenodo.org/record/3873076/files/unpack_audio.sh'
 curl -fOL 'https://zenodo.org/record/3873076/files/audio-eval-0.tar.gz'
 curl -fOL 'https://zenodo.org/record/3873076/files/audio-eval-1.tar.gz'
 curl -fOL 'https://zenodo.org/record/3873076/files/audio-eval-2.tar.gz'
 curl -fOL 'https://zenodo.org/record/3873076/files/audio.tar.gz'
 
-tar -xzvf audio.tar.gz
-tar -xzvf audio-eval-0.tar.gz
-tar -xzvf audio-eval-1.tar.gz
-tar -xzvf audio-eval-2.tar.gz
+bash unpack_audio.sh

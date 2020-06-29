@@ -49,13 +49,7 @@ class SONYC_UST(Dataset):
         subset = DataSubset('all', self, tags, audio_dir)
         self.add_subset(subset.subset('training', tags.split == 'train'))
         self.add_subset(subset.subset('validation', tags.split == 'validate'))
-
-        test_dirs = [self.root_dir / f'audio-eval-{i}' for i in range(3)]
-        test_set = DataSubset.concat([DataSubset('test', self, None, audio_dir)
-                                      for audio_dir in test_dirs])
-        test_set.tags = test_set.tags.join(tags[tags.split == 'test'])
-        test_set.tags.index.name = 'audio_filename'
-        self.add_subset(test_set)
+        self.add_subset(subset.subset('test', tags.split == 'test'))
 
 
 def _read_taxonomy(path):
