@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 import oyaml as yaml
-from extern.metrics import evaluate, micro_averaged_auprc, macro_averaged_auprc
+from metrics import evaluate, micro_averaged_auprc, macro_averaged_auprc
 
 
 if __name__ == '__main__':
