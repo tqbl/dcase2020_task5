@@ -74,7 +74,8 @@ def train(x_train, y_train, x_val, y_val, log_dir, model_dir, **params):
 
     for epoch in range(initial_epoch, params['n_epochs']):
         # Enable data augmentation after 5 epochs
-        if epoch == 5 and params['augment']:
+        if loader_train.dataset.transform is None \
+                and epoch >= 5 and params['augment']:
             loader_train.dataset.transform = SpecAugment()
 
         # Train model using training set
