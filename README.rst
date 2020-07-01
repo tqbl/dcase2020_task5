@@ -119,7 +119,7 @@ Prediction
 
 To compute predictions, run::
 
-    python task5/main.py predict <validation/test> [--dataset_dir DIR] [--extraction_dir DIR] [--model_dir DIR] [--log_dir DIR] [--prediction_dir DIR] [--training_id ID] [--use_stc BOOL] [--mask MASK] [--epochs EPOCHS] [--clean BOOL]
+    python task5/predict.py <validation/test> [--dataset_dir DIR] [--extraction_dir DIR] [--model_dir DIR] [--log_dir DIR] [--prediction_dir DIR] [--training_id ID] [--use_stc BOOL] [--mask MASK] [--epochs EPOCHS] [--clean BOOL]
 
 By default, it will average the predictions of the top three epochs
 (based on the macro AUPRC metric). To change this behavior, use the
