@@ -16,7 +16,7 @@ class SONYC_UST(Dataset):
         self.label_set = self.fine_label_set
 
         # Read annotations (tags) from file
-        if annotations_path is None:
+        if annotations_path is None or not annotations_path.name:
             annotations_path = self.root_dir / 'annotations.csv'
         dtype_map = {f'{label}_proximity': object
                      for label in self.fine_label_set}
