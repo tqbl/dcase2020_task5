@@ -112,8 +112,6 @@ disable the use of pseudo-labels for training.
 Use the ``--use_stc`` option to enable (default) or disable the use of
 spatiotemporal context (STC) features.
 
-__ https://zenodo.org/record/3576403/files/Cnn10_mAP=0.380.pth
-
 Prediction
 ^^^^^^^^^^
 
