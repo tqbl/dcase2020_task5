@@ -127,10 +127,11 @@ def parse_args():
     args_default = dict(config.items('Default'))
     output_path = config['Training']['pseudolabel_path']
     parser.set_defaults(**args_default, output_path=output_path)
-    parser.add_argument('--output_path', type=Path, metavar='PATH')
-    parser.add_argument('--validate', type=cli.boolean, metavar='BOOL')
+    parser.add_argument('--dataset_dir', type=Path, metavar='DIR')
     parser.add_argument('--minimum', type=int, default=30, metavar='N')
     parser.add_argument('--n_epochs', type=int, default=20, metavar='N')
+    parser.add_argument('--validate', type=cli.boolean, metavar='BOOL')
+    parser.add_argument('--output_path', type=Path, metavar='PATH')
 
     return parser.parse_args(remaining_args)
 

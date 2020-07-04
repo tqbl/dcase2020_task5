@@ -87,6 +87,36 @@ To extract feature vectors, run::
 
 This extracts log-mel spectrograms and stores them in a HDF5 file.
 
+Pseudo-labeling
+^^^^^^^^^^^^^^^
+
+To generate pseudo-labels, run::
+
+    python task5/relabel.py [--dataset_dir DIR] [--minimum N] [--n_epochs N] [--validate BOOL] [--output_path PATH]
+
+This will train a simple two-layer neural network to estimate labels for
+the training set. To avoid confusion, we will refer to the training set
+used to train the simple neural network as the pseudo-labeling training
+set (PTS), while the training set of the SONYC-UST dataset will simply
+be called the training set.
+
+The ``--minimum`` option is used to set the minimum number of PTS
+instances per class. In order to satisfy this requirement, instances
+from the training set are sampled and included in the PTS. Setting this
+option to zero will disable sampling. The drawback of not sampling is
+that the PTS will under-represent several of the classes to the point
+where some classes will have no examples.
+
+The number of training epochs can be specified using ``--n_epochs``.
+
+Use the ``--validate`` option to use a subset of the PTS for validation.
+
+Use the ``--output_path`` option to specify the output path. By default,
+the output path is ``metadata/pseudolabels.csv``, meaning the
+`pseudolabels.csv` file that is already provided will be overwritten.
+
+__ metadata/pseudolabels.csv
+
 Training
 ^^^^^^^^
 
