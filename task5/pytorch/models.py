@@ -80,8 +80,10 @@ def create_model(model_type, n_classes, n_aux=None):
     if model_type.lower() == 'gcnn':
         model = GCNN(n_classes, n_aux)
     elif model_type.lower() == 'qkcnn10':
-        model = qkcnn.Cnn10(527, n_aux)
-        checkpoint = torch.load('Cnn10.pth', map_location='cpu')
+        model = qkcnn.Cnn10(527, n_aux)  # Initially 527-class output
+        url = 'https://zenodo.org/record/3576403/files/Cnn10_mAP=0.380.pth'
+        checkpoint = torch.hub.load_state_dict_from_url(
+            url, map_location='cpu')
         model.load_state_dict(checkpoint['model'], strict=False)
         in_features = model.fc_audioset.in_features + (n_aux or 0) * 2
         model.fc_audioset = nn.Linear(in_features, n_classes)

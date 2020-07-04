@@ -97,7 +97,7 @@ To train a model, run::
 The ``--model`` option accepts the following values:
 
 * ``gcnn`` - Use the randomly-initialized GCNN model.
-* ``qkcnn10`` - Use the pre-trained CNN10 model. Download the weights `here`__.
+* ``qkcnn10`` - Use the pre-trained CNN10 (PANN) model.
 
 The ``--training_id`` option is used to differentiate training runs, and
 partially determines where the models are saved. When running multiple
