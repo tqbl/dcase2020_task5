@@ -3,7 +3,11 @@ Surrey CVSSP DCASE 2020 Task 5 System
 
 This is the source code for CVSSP's `DCASE 2020 Task 5`__ submission.
 
+For more details about the system, consider reading the `technical
+report`__ [1]_.
+
 __ http://dcase.community/challenge2020/task-urban-sound-tagging-with-spatiotemporal-context
+__ http://dcase.community/documents/challenge2020/technical_reports/DCASE2020_Iqbal_38_t5.pdf
 
 
 .. contents::
@@ -164,3 +168,22 @@ To evaluate the predictions, we have integrated the code from the
     python task5/extern/evaluate_predictions.py [-h] <prediction_path> <annotation_path> <yaml_path>
 
 __ https://github.com/sonyc-project/dcase2020task5-uststc-baseline/
+
+
+Citing
+------
+If you wish to cite this work, please cite the following paper:
+
+.. [1] \T. Iqbal, Y. Cao, M. D. Plumbley, and W. Wang, "Incorporating
+       Auxiliary Data for Urban Sound Tagging," DCASE2020 Challenge,
+       Tech. Rep., October 2020.
+
+BibTeX::
+
+    @techreport{Iqbal2020,
+        author = {Iqbal, Turab and Cao, Yin and Plumbley, Mark D. and Wang, Wenwu},
+        title = {Incorporating Auxiliary Data for Urban Sound Tagging},
+        institution = {DCASE2020 Challenge},
+        year = {2020},
+        month = {October},
+    }
