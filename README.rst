@@ -113,7 +113,7 @@ Use the ``--validate`` option to use a subset of the PTS for validation.
 
 Use the ``--output_path`` option to specify the output path. By default,
 the output path is ``metadata/pseudolabels.csv``, meaning the
-`pseudolabels.csv` file that is already provided will be overwritten.
+`pseudolabels.csv`__ file that is already provided will be overwritten.
 
 __ metadata/pseudolabels.csv
 
