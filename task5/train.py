@@ -65,13 +65,6 @@ def train(args):
                    log_dir, model_dir, **params)
 
 
-def _load_data(subset, data_loader):
-    n = len(subset.tags.index.unique())
-    print(f'Loading {subset.name} set ({n} instances)...')
-    return utils.timeit(lambda: data_loader(subset),
-                        f'Loaded {subset.name} set')
-
-
 def parse_args():
     config, conf_parser, remaining_args = cli.parse_config_args()
     parser = argparse.ArgumentParser(parents=[conf_parser])
