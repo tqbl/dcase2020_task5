@@ -20,7 +20,7 @@ numpy==1.19.0
 oauthlib==3.1.0
 oyaml==0.9
 pandas==0.25.3
-protobuf==3.12.2
+protobuf==3.18.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
