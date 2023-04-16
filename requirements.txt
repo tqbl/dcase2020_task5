@@ -41,5 +41,5 @@ torch==1.4.0
 tqdm==4.47.0
 urllib3==1.26.5
 werkzeug==1.0.1
-wheel==0.34.2; python_version >= "3"
+wheel==0.38.1; python_version >= "3"
 zipp==3.1.0; python_version < "3.8"
