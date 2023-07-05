@@ -7,7 +7,7 @@ chardet==3.0.4
 decorator==4.4.2
 google-auth==1.18.0
 google-auth-oauthlib==0.4.1
-grpcio==1.30.0
+grpcio==1.53.0
 h5py==2.10.0
 idna==2.10
 importlib-metadata==1.7.0; python_version < "3.8"
